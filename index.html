@@ -7,10 +7,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
-	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦾</text></svg>">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=smart_toy" />
+  <!-- <span class="material-symbols-outlined">smart_toy</span> -->
 </head>
 
 <body>
+  <!-- Dark Mode Toggle -->
+  <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">🌙</button>
+
   <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
     <tr style="padding:0px">
       <td style="padding:0px">
@@ -38,6 +43,24 @@
             </td>
           </tr>
         </tbody></table>
+
+        <!-- News Section -->
+        <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+          <tr>
+            <td style="padding:20px;width:100%;vertical-align:middle">
+              <heading>News</heading>
+              <ul class="news-list" id="newsList">
+                <li><span class="news-date">[Jan 2026]</span> One paper accepted to ICRA 2026!</li>
+                <li><span class="news-date">[Sep 2025]</span> One paper accepted to NeurIPS 2025!</li>
+                <li><span class="news-date">[Jul 2024]</span> One paper accepted to ECCV 2024!</li>
+                <li class="news-hidden"><span class="news-date">[Nov 2023]</span> One paper accepted to RA-L!</li>
+                <li class="news-hidden"><span class="news-date">[Jul 2023]</span> One paper accepted to Pacific Graphics 2023!</li>
+              </ul>
+              <button id="newsToggle" class="news-toggle">Show more ▼</button>
+            </td>
+          </tr>
+        </tbody></table>
+
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
             <tr>
             <td style="padding:20px;width:100%;vertical-align:middle">
@@ -49,6 +72,23 @@
           </tr>
         </tbody></table>
         <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
+          <tr>
+            <td style="padding:20px;width:25%;vertical-align:middle">
+                <img src="images/point2act.gif" width="160">
+            </td>
+            <td style="padding:20px;width:75%;vertical-align:middle">
+              <papertitle>Point2Act: Efficient 3D Distillation of Multimodal LLMs for Zero-Shot Context-Aware Grasping</papertitle>
+              <br>
+              <strong>Sang Min Kim</strong>, <a href="https://heo0224.github.io">Hyeongjun Heo</a>, <a href="https://www.junhokim.xyz">Junho Kim</a>, <a href="https://www.gabe-yhlee.com/">Yonghyeon Lee</a>, <a href="https://3d.snu.ac.kr">Young Min Kim</a>
+              <br>
+              <em>ICRA</em>, 2026
+              <br>
+							<a href="https://sangminkim-99.github.io/point2act/">project page</a> /
+							<a href="https://www.arxiv.org/abs/2508.03099">paper</a> /
+							<a href="#">code</a>
+              <p></p>
+            </td>
+          </tr>
           <tr>
             <td style="padding:20px;width:25%;vertical-align:middle">
                 <img src="images/eugen.png" width="160">
@@ -64,23 +104,6 @@
               <br>
 							<!-- <a href="https://sangminkim-99.github.io/point2act/">project page</a> / -->
 							<a href="#">paper</a> /
-							<a href="#">code</a>
-              <p></p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:20px;width:25%;vertical-align:middle">
-                <img src="images/point2act.gif" width="160">
-            </td>
-            <td style="padding:20px;width:75%;vertical-align:middle">
-              <papertitle>Point2Act: Efficient 3D Distillation of Multimodal LLMs for Zero-Shot Context-Aware Grasping</papertitle>
-              <br>
-              <strong>Sang Min Kim</strong>, <a href="https://heo0224.github.io">Hyeongjun Heo</a>, <a href="https://www.junhokim.xyz">Junho Kim</a>, <a href="https://www.gabe-yhlee.com/">Yonghyeon Lee</a>, <a href="https://3d.snu.ac.kr">Young Min Kim</a>
-              <br>
-              <em>CoRL</em>, 2025 @ <em>Genpriors Workshop</em>
-              <br>
-							<a href="https://sangminkim-99.github.io/point2act/">project page</a> /
-							<a href="https://www.arxiv.org/abs/2508.03099">paper</a> /
 							<a href="#">code</a>
               <p></p>
             </td>
@@ -197,6 +220,35 @@
       </td>
     </tr>
   </table>
+
+  <script>
+    const toggle = document.getElementById('darkModeToggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const stored = localStorage.getItem('darkMode');
+
+    if (stored === 'true' || (stored === null && prefersDark)) {
+      document.body.classList.add('dark-mode');
+      toggle.textContent = '☀️';
+    }
+
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      toggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('darkMode', isDark);
+    });
+
+    // News toggle
+    const newsToggle = document.getElementById('newsToggle');
+    const newsList = document.getElementById('newsList');
+    let newsExpanded = false;
+
+    newsToggle.addEventListener('click', () => {
+      newsExpanded = !newsExpanded;
+      newsList.classList.toggle('expanded', newsExpanded);
+      newsToggle.textContent = newsExpanded ? 'Show less ▲' : 'Show more ▼';
+    });
+  </script>
 </body>
 
 </html>
