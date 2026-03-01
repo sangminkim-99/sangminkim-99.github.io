@@ -396,6 +396,61 @@
     font-size: 0.72rem;
   }
 
+  /* ── Image Upload Modal ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.78);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    width: min(500px, 94vw);
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: pop 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  .modal-title { font-size: 1.1rem; font-weight: 700; color: #fff; }
+  .modal-previews {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .preview-box { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .preview-label { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+  .preview-box canvas { border: 1px solid var(--border); border-radius: 8px; }
+  .modal-field { display: flex; flex-direction: column; gap: 8px; }
+  .modal-field > label { font-size: 0.82rem; color: var(--text); }
+  .modal-hint { font-size: 0.72rem; color: var(--text-dim); }
+  .size-switch { display: flex; gap: 6px; flex-wrap: wrap; }
+  .size-btn {
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface2);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s;
+  }
+  .size-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .size-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  input[type=range] { accent-color: var(--accent); cursor: pointer; }
+
   /* ── Responsive ── */
   @media (max-width: 600px) {
     :root { --cell: 26px; --clue-size: 26px; }
@@ -456,7 +511,7 @@
 <!-- Win Overlay -->
 <div class="win-overlay" id="winOverlay">
   <div class="win-card">
-    <div class="win-emoji">🎉</div>
+    <div class="win-emoji" id="winEmoji">🎉</div>
     <div class="win-title">Solved!</div>
     <div class="win-sub" id="winPuzzleName"></div>
     <div class="win-time" id="winTime"></div>
@@ -479,6 +534,49 @@
     <div class="win-sub">Better luck next time.</div>
     <div style="display:flex;gap:12px;justify-content:center;margin-top:8px;">
       <button class="btn primary" style="background:var(--accent2);border-color:var(--accent2);" onclick="closeGameOver()">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<!-- Image Upload Modal -->
+<input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="onImageSelected(event)">
+<div class="modal-overlay" id="imgModal">
+  <div class="modal-card">
+    <div class="modal-title">📷 Create Custom Puzzle</div>
+    <div class="modal-previews">
+      <div class="preview-box">
+        <div class="preview-label">Original</div>
+        <canvas id="origCanvas" width="160" height="160"></canvas>
+      </div>
+      <div class="preview-box">
+        <div class="preview-label">Nonogram Preview</div>
+        <canvas id="binCanvas" width="160" height="160"></canvas>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>Board Size</label>
+      <div class="size-switch">
+        <button class="size-btn" data-size="10" onclick="setCustomSize(10)">10×10</button>
+        <button class="size-btn active" data-size="15" onclick="setCustomSize(15)">15×15</button>
+        <button class="size-btn" data-size="20" onclick="setCustomSize(20)">20×20</button>
+        <button class="size-btn" data-size="25" onclick="setCustomSize(25)">25×25</button>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>Edge Sensitivity — <span id="threshVal">128</span></label>
+      <input type="range" id="threshSlider" min="0" max="255" value="128" oninput="onThreshChange(this.value)" style="width:100%">
+      <div class="modal-hint">Lower = strong edges only · Higher = more edges captured</div>
+    </div>
+    <div class="modal-field" style="flex-direction:row;align-items:center;gap:10px;">
+      <label style="margin:0;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:0.82rem;">
+        <input type="checkbox" id="medianToggle" onchange="setMedianPooling(this.checked)">
+        Median Pooling
+        <span style="color:var(--text-dim);font-size:0.72rem;">(debug)</span>
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="cancelImageModal()">Cancel</button>
+      <button class="btn primary" onclick="addImagePuzzle()">Add Puzzle</button>
     </div>
   </div>
 </div>
@@ -700,15 +798,48 @@ let PUZZLES = [...BUILTIN_PUZZLES];
 
 // ══════════════════════════════════════════
 // DAILY PUZZLE CONFIG
-// 5 puzzles per day — different sizes, different Picsum seeds
 // ══════════════════════════════════════════
 const DAILY_CONFIGS = [
-  { label: 'Easy',   size: 10, seedSuffix: 'A' },
-  { label: 'Normal', size: 12, seedSuffix: 'B' },
-  { label: 'Hard',   size: 15, seedSuffix: 'C' },
-  { label: 'Expert', size: 18, seedSuffix: 'D' },
-  { label: 'Master', size: 20, seedSuffix: 'E' },
+  { label: 'Easy',   size: 10 },
+  { label: 'Normal', size: 12 },
+  { label: 'Hard',   size: 15 },
+  { label: 'Expert', size: 18 },
+  { label: 'Master', size: 20 },
 ];
+
+// Curated OpenMoji codepoints — simple silhouettes that work well as nonograms
+const EMOJI_POOL = [
+  // Animals
+  '1F431', '1F436', '1F438', '1F98A', '1F984', '1F42C', '1F422', '1F989',
+  '1F985', '1F40D', '1F419', '1F433', '1F98B', '1F40E', '1F981', '1F428',
+  '1F43C', '1F426', '1F427', '1F42F', '1F41D', '1F98C', '1F43B', '1F41B',
+  // Objects
+  '1F3E0', '1F697', '2708',  '2693',  '1F511', '1F3B8', '1F514', '26BD',
+  '1F3C0', '1F682', '26F5',  '1F6B2', '231B',  '1F4F7', '1F3BA', '1F3B7',
+  '1F52E', '1F3F0', '26F3',  '1F3B9', '1F6F8', '2694',  '1F3B3',
+  // Nature
+  '1F332', '1F335', '1F338', '2B50',  '1F319', '2600',  '1F30A', '1F525',
+  '2744',  '1F344', '1F33B', '26A1',  '1F308', '1F30D', '2604',
+  // Food
+  '1F355', '1F354', '1F382', '1F34E', '1F353', '1F369', '1F366', '1F370',
+  // Symbols
+  '1F451', '1F48E', '2665',  '2660',  '2663',  '2666',  '2694',  '1F3C6',
+];
+
+// Pick DAILY_CONFIGS.length unique emoji for a given date using seeded LCG + Fisher-Yates
+function dailyEmojiIndices(dateStr) {
+  let h = 0;
+  for (let i = 0; i < dateStr.length; i++)
+    h = (Math.imul(h, 31) + dateStr.charCodeAt(i)) >>> 0;
+  const rand = () => { h = (Math.imul(h, 1664525) + 1013904223) >>> 0; return h; };
+
+  const pool = Array.from({length: EMOJI_POOL.length}, (_, i) => i);
+  for (let i = 0; i < DAILY_CONFIGS.length; i++) {
+    const j = i + (rand() % (EMOJI_POOL.length - i));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, DAILY_CONFIGS.length);
+}
 
 // ══════════════════════════════════════════
 // STATE
@@ -1135,6 +1266,7 @@ function solvePuzzle() {
 function triggerWin() {
   won = true;
   clearInterval(timerInterval);
+  document.getElementById('winEmoji').textContent = puzzle.emojiChar || '🎉';
   document.getElementById('winPuzzleName').textContent = `${puzzle.name} · ${puzzle.difficulty}`;
   document.getElementById('winTime').textContent = '⏱ ' + formatTime(elapsedSeconds);
   const imgReveal = document.getElementById('winImageReveal');
@@ -1209,6 +1341,17 @@ function buildPicker() {
     builtinSection.appendChild(btn);
   });
   picker.appendChild(builtinSection);
+
+  // ── Upload button ──
+  const div2 = document.createElement('div');
+  div2.className = 'picker-divider';
+  picker.appendChild(div2);
+
+  const uploadBtn = document.createElement('button');
+  uploadBtn.className = 'puzzle-btn';
+  uploadBtn.textContent = '📷 Upload';
+  uploadBtn.onclick = () => document.getElementById('imgFileInput').click();
+  picker.appendChild(uploadBtn);
 }
 
 function updatePickerUI() {
@@ -1253,6 +1396,31 @@ function otsuThreshold(pixels) {
   return threshold;
 }
 
+// 5×5 Gaussian blur (sigma ≈ 1.4) to suppress noise before Sobel
+function gaussianBlur(grays, W, H) {
+  const K = [
+    [1,  4,  6,  4,  1],
+    [4, 16, 24, 16,  4],
+    [6, 24, 36, 24,  6],
+    [4, 16, 24, 16,  4],
+    [1,  4,  6,  4,  1],
+  ];
+  const out = new Float32Array(grays.length);
+  for (let r = 0; r < H; r++) {
+    for (let c = 0; c < W; c++) {
+      let s = 0;
+      for (let dr = -2; dr <= 2; dr++)
+        for (let dc = -2; dc <= 2; dc++) {
+          const nr = Math.max(0, Math.min(H-1, r+dr));
+          const nc = Math.max(0, Math.min(W-1, c+dc));
+          s += K[dr+2][dc+2] * grays[nr*W+nc];
+        }
+      out[r*W+c] = s / 256;
+    }
+  }
+  return out;
+}
+
 // Draw imgEl letterboxed onto a canvas of given size
 function drawLetterboxed(imgEl, canvas) {
   const W = canvas.width, H = canvas.height;
@@ -1274,9 +1442,10 @@ function imageToSolutionEdge(imgEl, size, edgeThreshold) {
   drawLetterboxed(imgEl, canvas);
 
   const data = canvas.getContext('2d').getImageData(0, 0, HI, HI).data;
-  const grays = new Float32Array(HI * HI);
+  const rawGrays = new Float32Array(HI * HI);
   for (let i = 0; i < HI * HI; i++)
-    grays[i] = 0.299 * data[i*4] + 0.587 * data[i*4+1] + 0.114 * data[i*4+2];
+    rawGrays[i] = 0.299 * data[i*4] + 0.587 * data[i*4+1] + 0.114 * data[i*4+2];
+  const grays = gaussianBlur(rawGrays, HI, HI);
 
   const GX = [[-1,0,1],[-2,0,2],[-1,0,1]];
   const GY = [[-1,-2,-1],[0,0,0],[1,2,1]];
@@ -1304,11 +1473,21 @@ function imageToSolutionEdge(imgEl, size, edgeThreshold) {
     for (let c = 0; c < size; c++) {
       const r0 = Math.floor(r * cell), r1 = Math.min(HI, Math.floor((r + 1) * cell));
       const c0 = Math.floor(c * cell), c1 = Math.min(HI, Math.floor((c + 1) * cell));
-      let peak = 0;
-      for (let pr = r0; pr < r1; pr++)
-        for (let pc = c0; pc < c1; pc++)
-          if (mag[pr * HI + pc] > peak) peak = mag[pr * HI + pc];
-      row.push(maxMag > 0 && (peak / maxMag * 255) > edgeThreshold ? 1 : 0);
+      let cellVal;
+      if (useMedianPooling) {
+        const vals = [];
+        for (let pr = r0; pr < r1; pr++)
+          for (let pc = c0; pc < c1; pc++)
+            vals.push(mag[pr * HI + pc]);
+        vals.sort((a, b) => a - b);
+        cellVal = vals[Math.floor(vals.length / 2)];
+      } else {
+        cellVal = 0;
+        for (let pr = r0; pr < r1; pr++)
+          for (let pc = c0; pc < c1; pc++)
+            if (mag[pr * HI + pc] > cellVal) cellVal = mag[pr * HI + pc];
+      }
+      row.push(maxMag > 0 && (cellVal / maxMag * 255) > edgeThreshold ? 1 : 0);
     }
     solution.push(row);
   }
@@ -1322,9 +1501,10 @@ function autoEdgeThreshold(imgEl) {
   canvas.width = HI; canvas.height = HI;
   drawLetterboxed(imgEl, canvas);
   const data = canvas.getContext('2d').getImageData(0, 0, HI, HI).data;
-  const grays = new Float32Array(HI * HI);
+  const rawGrays = new Float32Array(HI * HI);
   for (let i = 0; i < HI * HI; i++)
-    grays[i] = 0.299 * data[i*4] + 0.587 * data[i*4+1] + 0.114 * data[i*4+2];
+    rawGrays[i] = 0.299 * data[i*4] + 0.587 * data[i*4+1] + 0.114 * data[i*4+2];
+  const grays = gaussianBlur(rawGrays, HI, HI);
   const GX = [[-1,0,1],[-2,0,2],[-1,0,1]];
   const GY = [[-1,-2,-1],[0,0,0],[1,2,1]];
   const mags = [];
@@ -1356,19 +1536,20 @@ function todayDateString() {
 function loadOneDailyPuzzle(slotIdx) {
   const cfg = DAILY_CONFIGS[slotIdx];
   const dateStr = todayDateString();
-  const seed = `${dateStr}-${cfg.seedSuffix}`;
-  const url = `https://picsum.photos/seed/${seed}/${cfg.size * 20}/${cfg.size * 20}`;
+  const codepoint = EMOJI_POOL[dailyEmojiIndices(dateStr)[slotIdx]];
+  const emojiChar = String.fromCodePoint(parseInt(codepoint, 16));
+  const url = `https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/black/svg/${codepoint}.svg`;
 
   const img = new Image();
   img.crossOrigin = 'anonymous';
 
   img.onload = () => {
     try {
-      // Save original as dataURL for win reveal
+      // Save emoji at 200×200 for win reveal
       const orig = document.createElement('canvas');
-      orig.width = img.naturalWidth; orig.height = img.naturalHeight;
-      orig.getContext('2d').drawImage(img, 0, 0);
-      const imageUrl = orig.toDataURL('image/jpeg', 0.85);
+      orig.width = 200; orig.height = 200;
+      drawLetterboxed(img, orig);
+      const imageUrl = orig.toDataURL('image/png');
 
       const edgeThresh = autoEdgeThreshold(img);
       let solution = imageToSolutionEdge(img, cfg.size, edgeThresh);
@@ -1383,7 +1564,8 @@ function loadOneDailyPuzzle(slotIdx) {
       }
 
       const dailyPuzzle = {
-        name: `Daily ${cfg.label} · ${dateStr}`,
+        name: `Daily ${cfg.label}`,
+        emojiChar,
         size: cfg.size,
         difficulty: cfg.label,
         solution,
@@ -1429,6 +1611,96 @@ function loadOneDailyPuzzle(slotIdx) {
 
 function loadAllDailyPuzzles() {
   DAILY_CONFIGS.forEach((_, i) => loadOneDailyPuzzle(i));
+}
+
+// ══════════════════════════════════════════
+// IMAGE UPLOAD — CUSTOM PUZZLES
+// ══════════════════════════════════════════
+let pendingImgEl = null;
+let customSize = 15;
+let customThreshold = 128;
+let useMedianPooling = false;
+
+function setMedianPooling(v) {
+  useMedianPooling = v;
+  updateBinaryPreview();
+}
+
+function onImageSelected(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = '';
+  const reader = new FileReader();
+  reader.onload = evt => {
+    const img = new Image();
+    img.onload = () => {
+      pendingImgEl = img;
+      drawLetterboxed(img, document.getElementById('origCanvas'));
+      customThreshold = autoEdgeThreshold(img);
+      document.getElementById('threshSlider').value = customThreshold;
+      document.getElementById('threshVal').textContent = customThreshold;
+      setCustomSize(customSize);
+      document.getElementById('imgModal').classList.add('open');
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function setCustomSize(sz) {
+  customSize = sz;
+  document.querySelectorAll('.size-btn').forEach(b => {
+    b.classList.toggle('active', +b.dataset.size === sz);
+  });
+  updateBinaryPreview();
+}
+
+function onThreshChange(v) {
+  customThreshold = +v;
+  document.getElementById('threshVal').textContent = v;
+  updateBinaryPreview();
+}
+
+function updateBinaryPreview() {
+  if (!pendingImgEl) return;
+  const solution = imageToSolutionEdge(pendingImgEl, customSize, customThreshold);
+  const canvas = document.getElementById('binCanvas');
+  const W = canvas.width, H = canvas.height;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#0f1117';
+  ctx.fillRect(0, 0, W, H);
+  const cw = W / customSize, ch = H / customSize;
+  for (let r = 0; r < customSize; r++) {
+    for (let c = 0; c < customSize; c++) {
+      ctx.fillStyle = solution[r][c] ? '#e8eaf6' : '#22263a';
+      ctx.fillRect(c * cw + 0.5, r * ch + 0.5, cw - 1, ch - 1);
+    }
+  }
+}
+
+function cancelImageModal() {
+  document.getElementById('imgModal').classList.remove('open');
+  pendingImgEl = null;
+}
+
+function addImagePuzzle() {
+  if (!pendingImgEl) return;
+  const solution = imageToSolutionEdge(pendingImgEl, customSize, customThreshold);
+  const previewC = document.createElement('canvas');
+  previewC.width = 200; previewC.height = 200;
+  drawLetterboxed(pendingImgEl, previewC);
+  const imageUrl = previewC.toDataURL('image/jpeg', 0.85);
+  const newPuzzle = {
+    name: 'Custom Image',
+    size: customSize,
+    difficulty: 'Custom',
+    solution,
+    imageUrl,
+  };
+  PUZZLES.push(newPuzzle);
+  cancelImageModal();
+  buildPicker();
+  loadPuzzle(PUZZLES.length - 1);
 }
 
 // ══════════════════════════════════════════
