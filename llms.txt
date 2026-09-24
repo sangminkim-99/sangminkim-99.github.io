@@ -8,6 +8,8 @@ GitHub: https://github.com/sangminkim-99/
 
 ## Selected publications
 
+- [Real-Time Force Regulation for Whole-Hand Dexterous Grasping](https://sangminkim-99.github.io/reactive-grasp-whole-hand/): Preprint 2026. First author, with Alex Alexiev, Tzu-Yuan Lin, Sangbae Kim, Young Min Kim, and Yonghyeon Lee. Whole-hand contact estimation from a tracked object mesh and joint angles, with a convex QP re-solving contact forces every control cycle on a 27-DoF arm-hand system, without tactile sensing.
+- [POIL: Point-based One-Shot Imitation Learning with Stable Dynamical Systems](https://sangminkim-99.github.io/poil/): Preprint 2026. First author, with Jinwoo Seo, Hyeongjun Heo, Junho Lee, Yonghyeon Lee, and Young Min Kim. Transfers a manipulation skill from a single demonstration across object category, grasp pose, and goal geometry using 3D points on the object's functional part, grounded by a multimodal LLM and executed with a stable dynamical system.
 - [Point2Act: Efficient 3D Distillation of Multimodal LLMs for Zero-Shot Context-Aware Grasping](https://sangminkim-99.github.io/point2act/): ICRA 2026. First author. Distills multimodal LLM point outputs into 3D relevancy fields for zero-shot, context-aware 6-DoF grasping in under 20 seconds. arXiv: https://arxiv.org/abs/2508.03099. Code: https://github.com/sangminkim-99/Point2Act
 - [AnyCamVLA: Zero-Shot Camera Adaptation for Viewpoint Robust Vision-Language-Action Models](https://heo0224.github.io/AnyCamVLA/): IROS 2026. arXiv: https://arxiv.org/abs/2603.05868
 - [INGRID: Interactive Geometry and Instance Identification for Occluded Scenes](https://twjhlee.github.io/projects/INGRID): RSS 2026 SemRob Workshop.
@@ -20,3 +22,5 @@ GitHub: https://github.com/sangminkim-99/
 ## Pages
 
 - [Point2Act project page](https://sangminkim-99.github.io/point2act/): abstract, method, robot demo videos, BibTeX.
+- [Real-Time Force Regulation for Whole-Hand Dexterous Grasping project page](https://sangminkim-99.github.io/reactive-grasp-whole-hand/): abstract, method, robot demo videos, BibTeX.
+- [POIL project page](https://sangminkim-99.github.io/poil/): abstract, method, robot demo videos, BibTeX.

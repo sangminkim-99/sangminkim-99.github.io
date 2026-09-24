@@ -13,6 +13,18 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://sangminkim-99.github.io/reactive-grasp-whole-hand/</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sangminkim-99.github.io/poil/</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://sangminkim-99.github.io/nonogram.html</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>yearly</changefreq>
