@@ -89,18 +89,25 @@ strong {
   font-size: 14px;
 }
 
-heading {
+heading, h2.heading {
+  margin: 0;
+  font-weight: 400;
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 22px;
 }
 
-papertitle {
+papertitle, h3.papertitle {
+  display: inline;
+  margin: 0;
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 14px;
-  font-weight: 700
+  font-weight: 700;
 }
 
-name {
+name, h1.name {
+  display: inline;
+  margin: 0;
+  font-weight: 400;
   font-family: 'Lato', Verdana, Helvetica, sans-serif;
   font-size: 32px;
 }

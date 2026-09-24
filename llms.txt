@@ -1,0 +1,22 @@
+# Sang Min Kim
+
+> Ph.D. student in Electrical and Computer Engineering at Seoul National University (3D Vision Lab, advised by Prof. Young Min Kim) and visiting student at the MIT Biomimetic Robotics Lab (hosted by Prof. Sangbae Kim). Research on generalizable robot manipulation: language-guided grasping, 3D scene understanding, and vision-language-action models.
+
+Homepage: https://sangminkim-99.github.io/
+Google Scholar: https://scholar.google.com/citations?user=EM3sg4UAAAAJ
+GitHub: https://github.com/sangminkim-99/
+
+## Selected publications
+
+- [Point2Act: Efficient 3D Distillation of Multimodal LLMs for Zero-Shot Context-Aware Grasping](https://sangminkim-99.github.io/point2act/): ICRA 2026. First author. Distills multimodal LLM point outputs into 3D relevancy fields for zero-shot, context-aware 6-DoF grasping in under 20 seconds. arXiv: https://arxiv.org/abs/2508.03099. Code: https://github.com/sangminkim-99/Point2Act
+- [AnyCamVLA: Zero-Shot Camera Adaptation for Viewpoint Robust Vision-Language-Action Models](https://heo0224.github.io/AnyCamVLA/): IROS 2026. arXiv: https://arxiv.org/abs/2603.05868
+- [INGRID: Interactive Geometry and Instance Identification for Occluded Scenes](https://twjhlee.github.io/projects/INGRID): RSS 2026 SemRob Workshop.
+- [EUGens: Efficient, Unified and General Dense Layers](https://arxiv.org/abs/2410.09771): NeurIPS 2025. Co-first author. Code: https://github.com/arijitthegame/EUGen
+- [I2-SLAM: Inverting Imaging Process for Robust Photorealistic Dense SLAM](https://arxiv.org/abs/2407.11347): ECCV 2024.
+- [NFL: Normal Field Learning for 6-DoF Grasping of Transparent Objects](https://3d.snu.ac.kr/publications/NFL): IEEE RA-L 2023.
+- [Robust Novel View Synthesis with Color Transform Module](https://3d.snu.ac.kr/publications/ColorTransformModule): Computer Graphics Forum (Pacific Graphics) 2023. First author. Code: https://github.com/sangminkim-99/ColorTransformModule
+- [Balanced Spherical Grid for Egocentric View Synthesis (EgoNeRF)](https://www.changwoon.info/publications/EgoNeRF): CVPR 2023. arXiv: https://arxiv.org/abs/2303.12408
+
+## Pages
+
+- [Point2Act project page](https://sangminkim-99.github.io/point2act/): abstract, method, robot demo videos, BibTeX.

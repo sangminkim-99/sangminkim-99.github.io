@@ -1,9 +1,67 @@
 <!DOCTYPE html>
-<html data-theme="light">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Point2Act</title>
+    <title>Point2Act: Efficient 3D Distillation of Multimodal LLMs for Zero-Shot Context-Aware Grasping (ICRA 2026)</title>
+    <meta name="description" content="We propose Point2Act, which directly retrieves the 3D action point relevant to a contextually described task, leveraging Multimodal Large Language Models (MLLMs). Our 3D relevancy fields distill lightweight 2D point-level guidance from MLLMs into 3D via multi-view aggregation, yielding highly localized regions that transfer directly to 6-DoF grasp poses. The full pipeline (capture, MLLM querying, 3D reconstruction, grasp pose extraction) runs in under 20 seconds." />
+    <meta name="keywords" content="Point2Act, context-aware grasping, zero-shot grasping, multimodal LLM, MLLM distillation, 3D relevancy field, language-guided manipulation, robot grasping, NeRF, 6-DoF grasp pose, ICRA 2026" />
+    <meta name="author" content="Sang Min Kim, Hyeongjun Heo, Junho Kim, Yonghyeon Lee, Young Min Kim" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://sangminkim-99.github.io/point2act/" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Sang Min Kim" />
+    <meta property="og:title" content="Point2Act: Efficient 3D Distillation of Multimodal LLMs for Zero-Shot Context-Aware Grasping" />
+    <meta property="og:description" content="ICRA 2026. Point2Act grounds natural-language task descriptions into localized 3D relevancy fields by distilling multimodal LLMs, enabling zero-shot context-aware robot grasping in under 20 seconds." />
+    <meta property="og:url" content="https://sangminkim-99.github.io/point2act/" />
+    <meta property="og:image" content="https://sangminkim-99.github.io/point2act/assets/teasor_v8.jpg" />
+    <meta property="og:image:width" content="1015" />
+    <meta property="og:image:height" content="386" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Point2Act: Efficient 3D Distillation of Multimodal LLMs for Zero-Shot Context-Aware Grasping" />
+    <meta name="twitter:description" content="ICRA 2026. Zero-shot context-aware robot grasping by distilling multimodal LLMs into 3D relevancy fields." />
+    <meta name="twitter:image" content="https://sangminkim-99.github.io/point2act/assets/teasor_v8.jpg" />
+
+    <!-- Google Scholar / Highwire citation tags -->
+    <meta name="citation_title" content="Point2Act: Efficient 3D Distillation of Multimodal LLMs for Zero-Shot Context-Aware Grasping" />
+    <meta name="citation_author" content="Kim, Sang Min" />
+    <meta name="citation_author" content="Heo, Hyeongjun" />
+    <meta name="citation_author" content="Kim, Junho" />
+    <meta name="citation_author" content="Lee, Yonghyeon" />
+    <meta name="citation_author" content="Kim, Young Min" />
+    <meta name="citation_publication_date" content="2026" />
+    <meta name="citation_conference_title" content="IEEE International Conference on Robotics and Automation (ICRA)" />
+    <meta name="citation_arxiv_id" content="2508.03099" />
+    <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2508.03099" />
+    <meta name="citation_abstract_html_url" content="https://sangminkim-99.github.io/point2act/" />
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      "headline": "Point2Act: Efficient 3D Distillation of Multimodal LLMs for Zero-Shot Context-Aware Grasping",
+      "name": "Point2Act",
+      "url": "https://sangminkim-99.github.io/point2act/",
+      "sameAs": "https://arxiv.org/abs/2508.03099",
+      "image": "https://sangminkim-99.github.io/point2act/assets/teasor_v8.jpg",
+      "datePublished": "2026",
+      "abstract": "We propose Point2Act, which directly retrieves the 3D action point relevant to a contextually described task, leveraging Multimodal Large Language Models (MLLMs). Our 3D relevancy fields distill lightweight 2D point-level guidance from MLLMs into 3D via multi-view aggregation, yielding highly localized regions that transfer directly to 6-DoF grasp poses. The full pipeline (capture, MLLM querying, 3D reconstruction, grasp pose extraction) runs in under 20 seconds.",
+      "keywords": ["context-aware grasping", "zero-shot grasping", "multimodal large language models", "3D relevancy fields", "language-guided manipulation", "NeRF", "robot manipulation"],
+      "author": [
+        {"@type": "Person", "name": "Sang Min Kim", "url": "https://sangminkim-99.github.io/", "affiliation": {"@type": "Organization", "name": "Seoul National University"}},
+        {"@type": "Person", "name": "Hyeongjun Heo", "url": "https://heo0224.github.io/", "affiliation": {"@type": "Organization", "name": "Seoul National University"}},
+        {"@type": "Person", "name": "Junho Kim", "url": "https://www.junhokim.xyz/", "affiliation": {"@type": "Organization", "name": "Seoul National University"}},
+        {"@type": "Person", "name": "Yonghyeon Lee", "url": "https://www.gabe-yhlee.com/", "affiliation": {"@type": "Organization", "name": "Massachusetts Institute of Technology"}},
+        {"@type": "Person", "name": "Young Min Kim", "url": "https://3d.snu.ac.kr", "affiliation": {"@type": "Organization", "name": "Seoul National University"}}
+      ],
+      "publisher": {"@type": "Organization", "name": "IEEE"},
+      "isPartOf": {"@type": "PublicationEvent", "name": "IEEE International Conference on Robotics and Automation (ICRA) 2026"},
+      "codeRepository": "https://github.com/sangminkim-99/Point2Act"
+    }
+    </script>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -115,7 +173,7 @@
     <section class="hero">
       <div class="container is-max-desktop">
         <div class="hero-body" style="display: flex; flex-direction: column; align-items: center;">
-          <img src="./assets/teasor_v8.jpg" width="100%" style="display: block; margin: auto; margin-bottom: 20px;" />
+          <img src="./assets/teasor_v8.jpg" alt="Point2Act teaser: a robot arm grasps the part of an object described by a natural-language instruction using a 3D relevancy field" width="100%" style="display: block; margin: auto; margin-bottom: 20px;" />
           <video class="results_video" autoplay controls muted loop playsinline style="width: 100%; margin: auto; margin-top: 10px; margin-bottom: 10px;">
             <source src="./assets/videos/robot_demo.mp4" type="video/mp4">
           </video>
@@ -246,7 +304,7 @@
           </h2>
           <div class="column is full-width is-centered has-text-centered">
             <h3 class="subtitle is-size-4 has-text-weight-medium publication-keywords" style="margin: auto; margin-bottom: 10px;"><b>- Overview -</b></h3>
-            <img src="./assets/method_v9.jpg" width="100%" style="display: block; margin: auto; margin-bottom: 20px;" />
+            <img src="./assets/method_v9.jpg" alt="Point2Act method overview: multi-view capture, MLLM point queries, 3D relevancy field reconstruction with NeRF, and grasp pose extraction" width="100%" style="display: block; margin: auto; margin-bottom: 20px;" />
             <div class="content has-text-justified">
               <p>
                 We propose a novel framework that distills the knowledge of MLLMs into a 3D action point retrieval model, which we call Point2Act.
@@ -257,7 +315,7 @@
           </div>
           <div class="column is full-width is-centered has-text-centered">
             <h3 class="subtitle is-size-4 has-text-weight-medium publication-keywords" style="margin: auto; margin-bottom: 10px;"><b>- Efficient System Pipeline -</b></h3>
-            <img src="./assets/system_pipeline.png" width="100%" style="display: block; margin: auto; margin-bottom: 20px;" />
+            <img src="./assets/system_pipeline.png" alt="Parallelized Point2Act system pipeline completing scene capture to grasp pose extraction in about 16.5 seconds" width="100%" style="display: block; margin: auto; margin-bottom: 20px;" />
             <div class="content has-text-justified">
               <p>
                 Instead of sequentially processing the entire pipeline, we propose a parallelized system that significantly reduces the execution time (~59%).
@@ -353,6 +411,23 @@
     </div>
   </section>
 
+    <!-- BibTeX -->
+    <section class="section" id="bibtex">
+      <div class="container is-max-desktop">
+        <div class="column is-full-width is-centered has-text-centered has-text-left-mobile">
+          <h2 class="subtitle is-size-3 has-text-weight-medium publication-keywords">
+            BibTeX
+          </h2>
+          <pre class="has-text-left" style="border-radius: 12px; overflow-x: auto;"><code>@inproceedings{kim2026point2act,
+  title     = {Point2Act: Efficient 3D Distillation of Multimodal LLMs for Zero-Shot Context-Aware Grasping},
+  author    = {Kim, Sang Min and Heo, Hyeongjun and Kim, Junho and Lee, Yonghyeon and Kim, Young Min},
+  booktitle = {IEEE International Conference on Robotics and Automation (ICRA)},
+  year      = {2026}
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
     <!-- Footer section -->
     <footer class="footer" style="padding-top: 1rem">
       <!-- navigation -->
@@ -364,12 +439,12 @@
       <div class="navbar-menu" id="moreResearch">
         <div class="navbar-start" style="flex-grow: 1; justify-content: center">
           <div class="block is-flex" style="margin-bottom: 0px">
-            <a class="navbar-item" href="">
+            <a class="navbar-item" href="https://sangminkim-99.github.io/" aria-label="Sang Min Kim homepage">
               <span class="icon">
                 <i class="fas fa-home"></i>
               </span>
             </a>
-            <a class="navbar-item" href="">
+            <a class="navbar-item" href="https://github.com/sangminkim-99/Point2Act" aria-label="Point2Act code on GitHub">
               <span class="icon">
                 <i class="fab fa-github"></i>
               </span>
